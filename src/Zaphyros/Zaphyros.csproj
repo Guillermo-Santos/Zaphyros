@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <SelfContained>True</SelfContained>
+        <BinFormat>ELF</BinFormat>
+        <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
+        <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
+        <Deployment>ISO</Deployment>
+        <DebugEnabled>False</DebugEnabled>
+        <DebugMode>Source</DebugMode>
+        <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
+        <ISOFile>bin\Debug\net6.0\Abyss.iso</ISOFile>
+        <Platforms>AnyCPU;x64</Platforms>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <Launch>VMware</Launch>
+        <Profile>VMware</Profile>
+        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+        <PxeInterface>192.168.0.8</PxeInterface>
+        <RemoveBootDebugOutput>True</RemoveBootDebugOutput>
+        <OptimizationLevel>1</OptimizationLevel>
+        <VMWareEdition>Player</VMWareEdition>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+        <RepositoryType>git</RepositoryType>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <WarningLevel>7</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      <WarningLevel>7</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <WarningLevel>7</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      <WarningLevel>7</WarningLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
+      <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
+      <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+      <PackageReference Include="Cosmos.Plugs" Version="0-*" NoWarn="NU1604" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Zaphyros.Plugs\Zaphyros.Plugs.csproj" />
+      <ProjectReference Include="..\Zaphyros.Core\Zaphyros.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PlugsReference Include="..\Zaphyros.Plugs\bin\Debug\net6.0\Zaphyros.Plugs.dll" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Framework\System.Private.CoreLib.dll" />
+    <None Remove="Resources\Greetings" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Zaphyros.Generators\Zaphyros.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Cosmos.Coroutines" Version="1.0.1" />
+    <PackageReference Include="Cosmos.System2" Version="0-*" />
+    <!--<PackageReference Include="DotNetParser" Version="0.4.0" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Framework\System.Private.CoreLib.dll" />
+    <EmbeddedResource Include="Resources\Greetings">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DotNetParser\DotNetClr\libDotNetClr.csproj" />
+    <ProjectReference Include="..\..\..\DotNetParser\LibDotNetParser\LibDotNetParser.csproj" />
+  </ItemGroup>
+</Project>
