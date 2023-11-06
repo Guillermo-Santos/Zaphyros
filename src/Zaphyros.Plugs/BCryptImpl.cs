@@ -17,54 +17,6 @@ using System.Runtime.InteropServices;
 
 namespace Zaphyros.Plugs
 {
-
-    [Plug(Target = typeof(System.Runtime.DependentHandle))]
-    public sealed class DependentHandleImpl
-    {
-        /*
-        public static object? InternalGetTargetAndDependent(IntPtr handle)
-        {
-            if (handle == IntPtr.Zero) { return null; }
-
-            return GCHandle.FromIntPtr(handle).Target;
-        }*/
-
-        [PlugMethod(Signature = "System_Object__System_Runtime_DependentHandle_InternalGetTargetAndDependent_System_IntPtr___System_Object_")]
-        public static object? InternalGetTargetAndDependent(IntPtr handle, out object? dependant)
-        {
-            var GCHndl = GCHandle.FromIntPtr(handle);
-
-            var targ = (DependaatHndl?)GCHndl.Target;
-
-            if (targ.HasValue)
-            {
-                dependant = targ.Value.Item2?.Target;
-                return targ.Value.Item1?.Target;
-            }
-
-            dependant = null;
-            return null;
-        }
-
-        [PlugMethod(Signature = "System_IntPtr__System_Runtime_DependentHandle_InternalInitialize_System_Object__System_Object_")]
-        public static IntPtr InternalInitialize(object? target, object? dependent)
-        {
-            /*
-            var handl = new GCHandle
-            {
-                Target = new DependaatHndl(GCHandle.Alloc(target), GCHandle.Alloc(dependent))
-            };*/
-
-            return IntPtr.Zero;
-            //return GCHandle.ToIntPtr(handl);
-        }
-
-        public static void InternalFree(IntPtr handle)
-        {
-            GCHandle.FromIntPtr(handle).Free();
-        }
-
-    }
     [Plug(Target = typeof(BCrypt.Net.BCrypt))]
     public sealed class BCryptImpl
     {
@@ -127,25 +79,26 @@ namespace Zaphyros.Plugs
 
             if (bcryptMinorRevision != 'a' && bcryptMinorRevision != 'b' && bcryptMinorRevision != 'x' && bcryptMinorRevision != 'y')
             {
-                throw new ArgumentException("BCrypt Revision should be a, b, x or y", "bcryptMinorRevision");
+                throw new ArgumentException("BCrypt Revision should be a, b, x or y", nameof(bcryptMinorRevision));
             }
 
             byte[] array = new byte[16];
-            Console.WriteLine("gs 1");
+            //Console.WriteLine("gs 1");
             Random.NextBytes(array);
-
+            /*
             for (int i = 0; i < array.Length; i++)
             {
                 byte b = array[Random.Next(0, array.Length - 1)];
                 array[i] = (byte)((b * b ^ b >> b) - 1);
-            }
+            }*/
 
-            Console.WriteLine("gs 2");
+            //Console.WriteLine("gs 2");
             var stringBuilder = new StringBuilder(29);
             stringBuilder.Append("$2").Append(bcryptMinorRevision).Append('$')
                 .Append(workFactor.ToString("D2"))
                 .Append('$');
             stringBuilder.Append(EncodeBase64(array, array.Length));
+            //Console.WriteLine(stringBuilder.ToString());
             return stringBuilder.ToString();
         }
 
@@ -163,7 +116,7 @@ namespace Zaphyros.Plugs
         {
             if (length <= 0 || length > byteArray.Length)
             {
-                throw new ArgumentException("Invalid length", "length");
+                throw new ArgumentException("Invalid length", nameof(length));
             }
 
             char[] array = new char[(int)Math.Ceiling(length * 4.0 / 3.0)];
@@ -232,19 +185,6 @@ namespace Zaphyros.Plugs
         {
             current = 1;
             next = 1;
-        }
-    }
-
-    internal record struct DependaatHndl(GCHandle? Item1, GCHandle? Item2)
-    {
-        public static implicit operator (GCHandle?, GCHandle?)(DependaatHndl value)
-        {
-            return (value.Item1, value.Item2);
-        }
-
-        public static implicit operator DependaatHndl((GCHandle?, GCHandle?) value)
-        {
-            return new DependaatHndl(value.Item1, value.Item2);
         }
     }
 }

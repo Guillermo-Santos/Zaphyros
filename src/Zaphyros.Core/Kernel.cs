@@ -12,6 +12,8 @@ using Zaphyros.Core.Security;
 using Zaphyros.Core.Users;
 using System.Text.Json;
 using Zaphyros.Core.Configuration;
+using Zaphyros.Core.Apps;
+using System.Net.WebSockets;
 
 namespace Zaphyros.Core
 {
@@ -25,6 +27,7 @@ namespace Zaphyros.Core
         private string? _Prompt;
         internal static CosmosVFS Vfs { get; private set; }
         private static CommandHandler commandHandler;
+        internal static TaskManager TaskManager { get; private set; }
 
         public void BeforeRun()
         {
@@ -60,28 +63,33 @@ namespace Zaphyros.Core
                 Console.WriteLine("System.Private.CoreLib.dll File Added Successfully...");
             }
 
+            //if (!File.Exists($@"0:\System\users"))
+            {
+                Console.WriteLine("Adding users...");
+                if (!Directory.Exists($@"0:\System"))
+                {
+                    Directory.CreateDirectory($@"0:\System");
+                }
+                File.Create($@"0:\System\users").Close();
+                File.WriteAllBytes($@"0:\System\users", SysFiles.usrFile);
+                Console.WriteLine("users File Added Successfully...");
+            }
+
+            //Console.WriteLine(Encoding.ASCII.GetString(SysFiles.usrFile));
+            //Console.WriteLine(File.ReadAllText("2:\\users"));
+            //Console.ReadKey();
+
+            TaskManager = new TaskManager();
+            Console.WriteLine($"Registering Service {nameof(WorkFactorCalculatorService)}");
+            TaskManager.RegisterService(new WorkFactorCalculatorService());
+            Console.WriteLine($"Registered Service {nameof(WorkFactorCalculatorService)}");
+
         }
 
         delegate uint HashPrototype(byte[] InputText);
         public void Run()
         {
-            Console.WriteLine(BigInteger.Parse("2323333333333333333333333333232323232"));
-
-            /*
-            var opt  = SourceGenerationContext.Default.Options;
-            var user2 = (User)JsonSerializer.Deserialize(jsonString, typeof(User), opt)!;
-            Console.WriteLine($"Name={user2.Name}");*/
-
-            /*
-            var hash = BCrypt.Net.BCrypt.EnhancedHashPassword("Hello World!", 15, HashType.SHA256);
-            Console.WriteLine(hash);
-            Console.WriteLine(BCrypt.Net.BCrypt.EnhancedVerify("Hello World!", hash, HashType.SHA256));
-            */
-
-
-
-            //var bi = new BigInteger(0);
-            //Console.WriteLine($"BigInt: {bi}");
+            TaskManager.Run();
 
             Console.ReadKey(true);
             Console.WriteLine("Let's Start:");

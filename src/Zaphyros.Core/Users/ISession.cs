@@ -13,15 +13,14 @@ namespace Zaphyros.Core.Users
 
     internal abstract class Session
     {
-        public string Name { get; init; }
+        public string Name => User.Name;
         public User User { get; init; }
         public bool IsActive { get; set; }
 
 
-        public Session(User user, string name)
+        public Session(User user)
         {
             User = user;
-            Name = name;
         }
 
         public virtual void Start() { }
@@ -35,7 +34,7 @@ namespace Zaphyros.Core.Users
         public static string Key => "899F7432-3F58-4994-A8D0-F312DAD5319B";
         public string CurrentWorkingDirectory { get; set; } = Environment.CurrentDirectory;
 
-        public TerminalSession(User user, string name) : base(user, name)
+        public TerminalSession(User user) : base(user)
         {
 
         }
