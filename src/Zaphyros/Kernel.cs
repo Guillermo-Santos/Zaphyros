@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using BCrypt.Net;
 using Cosmos.System.ExtendedASCII;
 using Zaphyros.Plugs;
 //using Console = System.Console;
@@ -55,12 +56,10 @@ namespace Zaphyros
         {
             // Kernel Initialization
             kernel = new();
-            var logger = new Logger<Kernel>();
-
 
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
 
-            Console.ReadLine();
+            //Console.ReadLine();
 
             Console.WriteLine("Setting SeedProvider");
             BCryptImpl.SeedProvider = kernel.SeedProvider;

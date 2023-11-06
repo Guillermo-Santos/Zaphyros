@@ -14,7 +14,6 @@ namespace Zaphyros.Core.Security
         {
             unchecked
             {
-                // TODO: Advance to the unreachable code as the SO Development Progress.
                 long ticks = DateTime.UtcNow.Ticks;
                 ulong cpuTime = CPU.GetCPUUptime();
                 uint kernelEnd = CPU.GetEndOfKernel();
@@ -58,7 +57,7 @@ namespace Zaphyros.Core.Security
                              ^ PerformOperation((ulong)ticks)
                              ^ PerformOperation((ulong)operationRandom.Next())) ^ (ulong)operationRandom.Next());
                 */
-                Console.WriteLine($"Seed: " + Seed);
+                //Console.WriteLine($"Seed: " + Seed);
 
                 return Seed;
             }

@@ -1,8 +1,9 @@
 ﻿namespace Zaphyros.Core.Users
 {
-    internal enum UserType
+    public enum UserType
     {
         Admin,
         Normal
     }
+
 }

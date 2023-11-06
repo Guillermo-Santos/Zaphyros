@@ -7,7 +7,7 @@ using Cosmos.System.Coroutines;
 
 namespace Zaphyros.Core.Apps
 {
-    internal abstract class Service : IDisposable
+    internal abstract class Service
     {
         private bool isRunning;
         private bool isTermidated;
@@ -31,6 +31,7 @@ namespace Zaphyros.Core.Apps
             }
         }
         public abstract void Update();
+        public virtual void AfterStart() { }
         public void Stop()
         {
             if (!isTermidated)
@@ -54,11 +55,6 @@ namespace Zaphyros.Core.Apps
             {
                 isRunning = true;
             }
-        }
-
-        public void Dispose()
-        {
-            Stop();
         }
     }
 

@@ -7,7 +7,7 @@
         <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
         <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
         <Deployment>ISO</Deployment>
-        <DebugEnabled>False</DebugEnabled>
+        <DebugEnabled>True</DebugEnabled>
         <DebugMode>Source</DebugMode>
         <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
         <ISOFile>bin\Debug\net6.0\Abyss.iso</ISOFile>
@@ -47,6 +47,16 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       <WarningLevel>7</WarningLevel>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="isoFiles\users" />
+      <None Remove="isoFiles\Zaphyros.conf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="isoFiles\users" />
+      <EmbeddedResource Include="isoFiles\Zaphyros.conf" />
+    </ItemGroup>
 
     <ItemGroup>
       <None Include="..\..\README.md">
