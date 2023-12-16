@@ -2,7 +2,7 @@
 using System.Text;
 using Zaphyros.Core.Apps;
 
-namespace Zaphyros.Core.Users
+namespace Zaphyros.Core.Users.Services
 {
     internal sealed class PasswordCheckerService : Service
     {

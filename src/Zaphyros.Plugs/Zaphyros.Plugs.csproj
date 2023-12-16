@@ -9,11 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="Cosmos.System2" Version="0-*" />
-    <PackageReference Include="XSharp" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Zaphyros.Core\Zaphyros.Core.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

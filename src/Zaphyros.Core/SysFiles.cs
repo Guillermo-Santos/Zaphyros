@@ -9,7 +9,7 @@ namespace Zaphyros.Core
         public static byte[] Greetings;
         [ManifestResourceStream(ResourceName = "Zaphyros.Core.Resources.Framework.System.Private.CoreLib.dll")]
         public static byte[] CorLib;
-        [ManifestResourceStream(ResourceName = "Zaphyros.Core.Resources.users")]
+        [ManifestResourceStream(ResourceName = "Zaphyros.Core.Resources.Users.users")]
         public static byte[] usrFile;
     }
 }

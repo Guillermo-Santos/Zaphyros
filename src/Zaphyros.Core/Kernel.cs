@@ -14,6 +14,7 @@ using System.Text.Json;
 using Zaphyros.Core.Configuration;
 using Zaphyros.Core.Apps;
 using System.Net.WebSockets;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Zaphyros.Core
 {
@@ -26,16 +27,14 @@ namespace Zaphyros.Core
 
         private string? _Prompt;
         internal static CosmosVFS Vfs { get; private set; }
-        private static CommandHandler commandHandler;
         internal static TaskManager TaskManager { get; private set; }
+        internal static Session Session { get; set; }
 
         public void BeforeRun()
         {
-            RAT.MinFreePages = 2;
+            //RAT.MinFreePages = 2;
             //Start Filesystem
             Vfs = new();
-            commandHandler = new();
-            _Prompt = @"0:\";
 
             VFSManager.RegisterVFS(Vfs);
 
@@ -76,7 +75,12 @@ namespace Zaphyros.Core
             }
 
             //Console.WriteLine(Encoding.ASCII.GetString(SysFiles.usrFile));
-            //Console.WriteLine(File.ReadAllText("2:\\users"));
+            foreach(var file in Directory.GetFiles("1:\\"))
+            {
+                Console.WriteLine(file);
+            }
+            //Console.ReadKey();
+            //Console.WriteLine(File.ReadAllText("1:\\pass.conf"));
             //Console.ReadKey();
 
             TaskManager = new TaskManager();
@@ -86,37 +90,9 @@ namespace Zaphyros.Core
 
         }
 
-        delegate uint HashPrototype(byte[] InputText);
         public void Run()
         {
             TaskManager.Run();
-
-            Console.ReadKey(true);
-            Console.WriteLine("Let's Start:");
-            foreach (var encoding in new List<Encoding>
-            {
-                Encoding.UTF8,
-                Encoding.Unicode,
-                Encoding.BigEndianUnicode,
-                Encoding.ASCII,
-                CosmosEncodingProvider.Instance.GetEncoding(437)!,
-                CosmosEncodingProvider.Instance.GetEncoding(858)!
-            })
-            {
-                Console.OutputEncoding = encoding;
-                Console.WriteLine($"Ecoding: {encoding.BodyName}");
-                Console.WriteLine("Line One");
-                Console.WriteLine("Line Two");
-                Console.WriteLine("Line Three");
-                Thread.Sleep(1000);
-            }
-            Console.WriteLine($"{_Prompt}>");
-            var input = Console.ReadLine();
-
-            Console.WriteLine(input);
-
-            commandHandler.ExecuteCommand(input);
-            Heap.Collect();
         }
 
     }

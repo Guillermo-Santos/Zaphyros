@@ -5,6 +5,7 @@ namespace Zaphyros.Core.Users
 {
     public sealed class UserEntry
     {
+        private const string Separator = "::";
         public string Name { get; set; }
         public string Password { get; set; }
         public UserType UserType { get; set; }
@@ -50,7 +51,5 @@ namespace Zaphyros.Core.Users
                 yield return Parse(line);
             }
         }
-
-        private static readonly string Separator = "::";
     }
 }

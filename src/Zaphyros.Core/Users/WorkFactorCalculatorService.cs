@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cosmos.System.Coroutines;
 using Zaphyros.Core.Apps;
 using BCrypt.Net;
+using Zaphyros.Core.Users.Services;
 
 namespace Zaphyros.Core.Users
 {

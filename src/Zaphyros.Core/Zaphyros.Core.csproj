@@ -11,6 +11,7 @@
     <None Remove="Resources\Framework\System.Private.CoreLib.dll" />
     <None Remove="Resources\Greetings" />
     <None Remove="Resources\users" />
+    <None Remove="Resources\Zaphyros.conf" />
   </ItemGroup>
   
   <ItemGroup>
@@ -33,7 +34,8 @@
     <EmbeddedResource Include="Resources\Greetings">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\users" />
+    <EmbeddedResource Include="Resources\Users\users" />
+    <EmbeddedResource Include="Resources\Users\Zaphyros.conf" />
   </ItemGroup>
 
   <ItemGroup>
