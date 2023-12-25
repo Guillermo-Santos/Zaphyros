@@ -24,7 +24,6 @@ namespace Zaphyros.Core
         private ISeedProvider? _seedProvider;
         public ISeedProvider SeedProvider => _seedProvider ??= new BCryptSeedProvider();
 
-        private string? _Prompt;
         internal static CosmosVFS Vfs { get; private set; }
         private static CommandHandler commandHandler;
         internal static TaskManager TaskManager { get; private set; }
@@ -42,36 +41,36 @@ namespace Zaphyros.Core
             if (!File.Exists($@"0:\System\Greetings.txt"))
             {
                 Console.WriteLine("Adding Greetings File...");
-                if (!Directory.Exists($@"{_Prompt}System"))
+                if (!Directory.Exists($@"0:\System"))
                 {
-                    Directory.CreateDirectory($@"{_Prompt}System");
+                    Directory.CreateDirectory($@"0:\System");
                 }
-                File.Create($@"{_Prompt}System\Greetings.txt").Close();
-                File.WriteAllBytes($@"{_Prompt}System\Greetings.txt", SysFiles.Greetings);
+                File.Create($@"0:\System").Close();
+                File.WriteAllBytes($@"0:\System", SysFiles.Greetings);
                 Console.WriteLine("Greetings File Added Successfully...");
             }
 
             if (!File.Exists($@"0:\System\System.Private.CoreLib.dll"))
             {
                 Console.WriteLine("Adding System.Private.CoreLib.dll...");
-                if (!Directory.Exists($@"{_Prompt}System"))
+                if (!Directory.Exists($@"0:\System"))
                 {
-                    Directory.CreateDirectory($@"{_Prompt}System");
+                    Directory.CreateDirectory($@"0:\System");
                 }
-                File.Create($@"{_Prompt}System\System.Private.CoreLib.dll").Close();
-                File.WriteAllBytes($@"{_Prompt}System\System.Private.CoreLib.dll", SysFiles.CorLib);
+                File.Create($@"0:\System\System.Private.CoreLib.dll").Close();
+                File.WriteAllBytes($@"0:\System\System.Private.CoreLib.dll", SysFiles.CorLib);
                 Console.WriteLine("System.Private.CoreLib.dll File Added Successfully...");
             }
 
-            //if (!File.Exists($@"0:\System\users"))
+            if (!File.Exists(SysFiles.USER_FILE))
             {
                 Console.WriteLine("Adding users...");
                 if (!Directory.Exists($@"0:\System"))
                 {
                     Directory.CreateDirectory($@"0:\System");
                 }
-                File.Create($@"0:\System\users").Close();
-                File.WriteAllBytes($@"0:\System\users", SysFiles.usrFile);
+                File.Create(SysFiles.USER_FILE).Close();
+                File.WriteAllBytes(SysFiles.USER_FILE, File.ReadAllBytes("1:\\System\\users.sys"));
                 Console.WriteLine("users File Added Successfully...");
             }
 
@@ -83,7 +82,6 @@ namespace Zaphyros.Core
             Console.WriteLine($"Registering Service {nameof(WorkFactorCalculatorService)}");
             TaskManager.RegisterService(new WorkFactorCalculatorService());
             Console.WriteLine($"Registered Service {nameof(WorkFactorCalculatorService)}");
-
         }
 
         delegate uint HashPrototype(byte[] InputText);

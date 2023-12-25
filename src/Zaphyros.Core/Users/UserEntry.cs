@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BCrypt.Net;
+using Cosmos.Core;
 
 namespace Zaphyros.Core.Users
 {
@@ -25,7 +26,7 @@ namespace Zaphyros.Core.Users
                 throw new ArgumentOutOfRangeException(nameof(line));
             }
 
-            return new()
+            var userEntry = new UserEntry()
             {
                 Name = properties[0],
                 UserType = (UserType)int.Parse(properties[1]),
@@ -33,11 +34,40 @@ namespace Zaphyros.Core.Users
                 NeedReHashing = (properties[3] == "1"),
                 Password = properties[4],
             };
+
+            Sys.Global.Debugger.Send(userEntry.ToString());
+
+            return userEntry;
+        }
+
+        public static void Save(UserEntry userEntry)
+        {
+            var lines = new List<string>();
+
+            var text = File.ReadAllText(SysFiles.USER_FILE);
+
+            lines.AddRange(text.Split(Environment.NewLine));
+
+            var index = lines.FindIndex(line => line.StartsWith(userEntry.Name));
+            if (index > -1)
+            {
+                lines[index] = userEntry.ToString();
+            }
+            else
+            {
+                lines.Add(userEntry.ToString());
+            }
+
+            using var writer = new StreamWriter(File.OpenWrite(SysFiles.USER_FILE), encoding: Encoding.ASCII);
+            foreach (var line in lines)
+            {
+                writer.WriteLine(line);
+            }
         }
 
         public static IEnumerable<UserEntry> GetUserEntries()
         {
-            var reader = new StreamReader(File.OpenRead(@"0:\System\users"), encoding: Encoding.ASCII);
+            var reader = new StreamReader(File.OpenRead(SysFiles.USER_FILE), encoding: Encoding.ASCII);
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();

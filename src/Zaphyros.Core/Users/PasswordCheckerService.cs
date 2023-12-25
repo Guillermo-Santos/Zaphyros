@@ -2,38 +2,38 @@
 using System.Text;
 using Zaphyros.Core.Apps;
 
+<<<<<<< Updated upstream:src/Zaphyros.Core/Users/PasswordCheckerService.cs
 namespace Zaphyros.Core.Users
+=======
+#nullable disable
+namespace Zaphyros.Core.Users.Services
+>>>>>>> Stashed changes:src/Zaphyros.Core/Users/Services/PasswordCheckerService.cs
 {
     internal sealed class PasswordCheckerService : Service
     {
-        private List<string> lines;
-        private int index;
+        private IEnumerator<UserEntry> entries;
+
         public override void BeforeStart()
         {
-            index = 0;
-            lines = new List<string>();
-
-            var text = File.ReadAllText(@"0:\System\users");
-
-            lines.AddRange(text.Split(Environment.NewLine));
+            entries = UserEntry.GetUserEntries().GetEnumerator();
         }
         public override void Update()
         {
-            if (index == lines.Count)
+            if (!entries.MoveNext())
             {
                 Stop();
                 return;
             }
+
             try
             {
-                var line = lines[index];
-                if (string.IsNullOrEmpty(line) || string.IsNullOrWhiteSpace(line) || line.StartsWith(";"))
+                var userEntry = entries.Current;
+                if (userEntry.NeedReHashing)
                 {
-                    index++;
+                    Console.WriteLine(userEntry);
                     return;
                 }
 
-                var userEntry = UserEntry.Parse(line);
                 PasswordConfiguration configuration = userEntry.UserType switch
                 {
                     UserType.Admin => PasswordConstants.AdminUser,
@@ -41,44 +41,20 @@ namespace Zaphyros.Core.Users
                     _ => throw new ArgumentException($"Invalid User Type {userEntry.UserType}"),
                 };
 
-                if (userEntry.HashType != configuration.HashType)
-                {
-                    userEntry.NeedReHashing = true;
-                    lines[index] = userEntry.ToString();
-                    index++;
-                    if (index == lines.Count)
-                    {
-                        Stop();
-                    }
-                    Console.WriteLine(userEntry);
-                    return;
-                }
-
-                if (BCrypt.Net.BCrypt.PasswordNeedsRehash(userEntry.Password, configuration.WorkFactor))
-                {
-                    userEntry.NeedReHashing = true;
-                    lines[index] = userEntry.ToString();
-                }
+                userEntry.NeedReHashing = (userEntry.HashType != configuration.HashType) || BCrypt.Net.BCrypt.PasswordNeedsRehash(userEntry.Password, configuration.WorkFactor);
                 Console.WriteLine(userEntry);
+                UserEntry.Save(userEntry);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
-            index++;
         }
 
         public override void AfterStart()
         {
-            using (var writer = new StreamWriter(File.OpenWrite(@"0:\System\users"), encoding: Encoding.ASCII))
-            {
-                foreach (var line in lines)
-                {
-                    writer.WriteLine(line);
-                }
-            }
-
-            Kernel.TaskManager.RegisterService(new UserLogginService());
+            entries.Dispose();
+            _ = Kernel.TaskManager.RegisterService(new UserLogginService());
         }
     }
 }

@@ -9,7 +9,13 @@ namespace Zaphyros.Core
         public static byte[] Greetings;
         [ManifestResourceStream(ResourceName = "Zaphyros.Core.Resources.Framework.System.Private.CoreLib.dll")]
         public static byte[] CorLib;
+<<<<<<< Updated upstream
         [ManifestResourceStream(ResourceName = "Zaphyros.Core.Resources.users")]
+=======
+        //[ManifestResourceStream(ResourceName = "Zaphyros.Core.Resources.Users.users")]
+>>>>>>> Stashed changes
         public static byte[] usrFile;
+
+        public static readonly string USER_FILE = "0:\\System\\users.sys";
     }
 }

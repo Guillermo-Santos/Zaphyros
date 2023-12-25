@@ -35,6 +35,9 @@ namespace Zaphyros.Core.Users
                 var userEntry = UserEntry.GetUserEntries().Where(ue => ue.Name == username).FirstOrDefault();
                 if (userEntry is not null && !string.IsNullOrEmpty(password))
                 {
+                    Console.WriteLine(userEntry.Password);
+                    Console.WriteLine(BCrypt.Net.BCrypt.HashPassword(password, userEntry.Password));
+                    Console.WriteLine(userEntry.Password == BCrypt.Net.BCrypt.HashPassword(password, userEntry.Password));
 
                     if (userEntry.NeedReHashing)
                     {
@@ -46,15 +49,20 @@ namespace Zaphyros.Core.Users
                         };
                         Console.WriteLine(userEntry.Password);
                         // We do not care why the password need rehashing, we just rehash with everything.
-                        userEntry.Password = BCrypt.Net.BCrypt.ValidateAndReplacePassword(password, userEntry.Password, true, userEntry.HashType, password, true, configuration.HashType, configuration.WorkFactor, true);
+                        Console.WriteLine("Update");
+                        userEntry.Password = BCrypt.Net.BCrypt.ValidateAndReplacePassword(password, userEntry.Password, (userEntry.HashType != HashType.None), userEntry.HashType, password, true, configuration.HashType, configuration.WorkFactor);
                         userEntry.NeedReHashing = false;
                         userEntry.HashType = configuration.HashType;
+
+                        UserEntry.Save(userEntry);
+
                         logging = true;
                         Console.WriteLine(userEntry.Password);
 
                     }
                     else
                     {
+                        Console.WriteLine("Normal");
                         logging = BCrypt.Net.BCrypt.EnhancedVerify(password, userEntry.Password, userEntry.HashType);
                     }
 
@@ -65,6 +73,7 @@ namespace Zaphyros.Core.Users
             catch (BcryptAuthenticationException)
             {
                 // We know that the password is wrong, just do nothing
+                Sys.Global.Debugger.Send($"{nameof(UserLogginService)} - Throw - {nameof(Update)} - Failed Auth");
             }
             catch (Exception ex)
             {

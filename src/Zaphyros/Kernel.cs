@@ -1,38 +1,15 @@
-﻿using System;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using BCrypt.Net;
+﻿using System.Text;
 using Cosmos.System.ExtendedASCII;
+using ThunderboltIoc;
+using Sys = Cosmos.System;
 using Zaphyros.Plugs;
+using StrongInject;
+using Zaphyros.Core.Logging;
+using Microsoft.Extensions.Logging;
 //using Console = System.Console;
 
 namespace Zaphyros
 {
-    public class Logger<T>
-    {
-        private readonly Type Type = typeof(T);
-        //private readonly unsafe int syze = sizeof(T);
-        public void TraceMessage(string message,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
-        {
-            Console.WriteLine("message: " + message);
-
-            Console.WriteLine("member Type AssemblyQualifiedName: " + Type.AssemblyQualifiedName);
-            Console.WriteLine("member Type Name: " + Type.Name);
-            Console.WriteLine("member Type Namespace: " + Type.Namespace);
-            //Console.WriteLine("member Type Size: " + syze);
-
-            Console.WriteLine("member name: " + memberName);
-            Console.WriteLine("source file path: " + sourceFilePath);
-            Console.WriteLine("source line number: " + sourceLineNumber);
-        }
-    }
-
     public sealed class Kernel : Sys.Kernel
     {
         private Core.Kernel kernel;
@@ -57,9 +34,18 @@ namespace Zaphyros
             // Kernel Initialization
             kernel = new();
 
-            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
 
-            //Console.ReadLine();
+            //var logger = new Logger<Kernel>(new LoggerFactory()
+            //    .UseConsole()
+            //    .UseDebugger());
+            var logger = new LoggerFactory()
+                .UseConsole()
+                .UseDebugger()
+                .CreateLogger(nameof(Kernel));
+
+            logger.LogInformation("Hola Mundo");
+
+            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
 
             Console.WriteLine("Setting SeedProvider");
             BCryptImpl.SeedProvider = kernel.SeedProvider;
@@ -72,8 +58,58 @@ namespace Zaphyros
             // Random Welcome Message
             var messageIndex = kernel.Random.Next(welcomeMessages.Length);
             Console.WriteLine(welcomeMessages[messageIndex]);
+
+            //Console.WriteLine(typeof(Kernel).IsInstanceOfType(messageIndex));
+            //Console.ReadKey();
+
+
+            // The code below, following the IoC pattern, is typically only aware of the IMessageWriter interface, not the implementation.
+            //ThunderboltActivator.Attach<FooThunderboltRegistration>();
+            //IMessageWriter messageWriter = ThunderboltActivator.Get<IMessageWriter>();
+            //messageWriter.Write("Hello");
         }
 
         protected override void Run() => kernel.Run();
     }
+
+    public partial class FooThunderboltRegistration : ThunderboltRegistration
+    {
+        protected override void Register(IThunderboltRegistrar reg)
+        {
+            reg.AddSingleton<MessageWriter>();
+            reg.AddScoped<IMessageWriter, MessageWriter>();
+            reg.AddScoped<ScopedMessageWriter>();
+            //reg.AddTransientFactory<Qux>(() => new Qux());
+        }
+    }
+
+    public interface IMessageWriter
+    {
+        void Write(string message);
+    }
+
+    internal class MessageWriter : IMessageWriter
+    {
+        public void Write(string message)
+        {
+            Console.WriteLine($"MessageWriter.Write(message: \"{message}\")");
+        }
+    }
+
+    internal class ScopedMessageWriter : IMessageWriter
+    {
+        private readonly IMessageWriter messageWriter;
+
+        public ScopedMessageWriter(IMessageWriter messageWriter)
+        {
+            this.messageWriter = messageWriter;
+        }
+        public void Write(string message)
+        {
+            messageWriter.Write(message);
+        }
+    }
+
+    [Register(typeof(MessageWriter))]
+    internal partial class Container : IContainer<MessageWriter> { }
 }

@@ -12,5 +12,4 @@
 
 Zaphyros::0::-1::0::$2a$09$QN6.HzyBgd8SorTwUY2EYOTuRWgQXl8VAimUgpgEd4RVI2fm6yxo.
 
-
 ; Note: First Logging on the Zaphyros will be slower, since the password will be marked to be rehashed on boot.
