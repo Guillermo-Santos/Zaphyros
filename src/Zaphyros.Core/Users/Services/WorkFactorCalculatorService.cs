@@ -22,27 +22,27 @@ namespace Zaphyros.Core.Users.Services
 
         public override void BeforeStart()
         {
-            workFactor = 10;
-            maxTime = 500;
+            workFactor = 12;
+            maxTime = 2500;
         }
         public override void Update()
         {
-            Console.WriteLine("Work Factor: " + workFactor);
+            Sys.Global.Debugger.Send("Work Factor: " + workFactor);
             var start = DateTime.UtcNow;
-            _ = BCrypt.Net.BCrypt.EnhancedHashPassword(PASSWORD, workFactor, HashType.SHA256);
+            _ = BCrypt.Net.BCrypt.HashPassword(PASSWORD, workFactor);
             var end = DateTime.UtcNow;
 
             var timeLapse = (end - start).TotalMilliseconds;
-            Console.WriteLine("Miliseconds: " + timeLapse);
+            Sys.Global.Debugger.Send("Miliseconds: " + timeLapse);
 
-            if (timeLapse > maxTime || workFactor == 31)
+            if (timeLapse >= maxTime || workFactor == 31)
             {
-                Console.WriteLine("Getting Normal");
+                Sys.Global.Debugger.Send("Getting Normal");
                 PasswordConstants.NormalUser.WorkFactor = workFactor;
-                Console.WriteLine("Getting Admin");
+                Sys.Global.Debugger.Send("Getting Admin");
                 PasswordConstants.AdminUser.WorkFactor = workFactor + ADMIN_WORK_FACTOR_MODIFIER;
 
-                Console.WriteLine("Stopping");
+                Sys.Global.Debugger.Send("Stopping");
                 Stop();
             }
 
@@ -50,7 +50,7 @@ namespace Zaphyros.Core.Users.Services
         }
         public override void AfterStart()
         {
-            Console.WriteLine($"Registering Service {nameof(PasswordCheckerService)}");
+            Sys.Global.Debugger.Send($"Registering Service {nameof(PasswordCheckerService)}");
             Kernel.TaskManager.RegisterService(new PasswordCheckerService());
         }
     }
