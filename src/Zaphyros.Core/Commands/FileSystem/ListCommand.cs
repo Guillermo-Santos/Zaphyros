@@ -11,7 +11,9 @@ namespace Zaphyros.Core.Commands.FileSystem
     {
         public override CommandResult Execute(string[] args, CancellationToken cancellationToken)
         {
-            var path = args[0];
+            string path;
+
+            path = args.Length > 0 ? args[0] : Kernel.Session.CurrentDirectory;
 
             if (string.IsNullOrEmpty(path)) return CommandResult.Failure;
 
