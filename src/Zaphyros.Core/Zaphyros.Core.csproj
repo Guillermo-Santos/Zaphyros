@@ -35,8 +35,6 @@
     <EmbeddedResource Include="Resources\Greetings">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Users\users" />
-    <EmbeddedResource Include="Resources\Users\Zaphyros.conf" />
   </ItemGroup>
 
   <ItemGroup>
