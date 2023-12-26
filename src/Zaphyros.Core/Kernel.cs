@@ -75,7 +75,11 @@ namespace Zaphyros.Core
             }
 
             TaskManager = new();
-            TaskManager.RegisterService(new WorkFactorCalculatorService());
+            Session = new SystemSession();
+            var SMS = SessionManagerService.Instance;
+            SMS.RegisterSession(Session);
+            // The Session Manager have the honor of having the PID 0. Depending on the evolution of the system, it will probably loss this honor...
+            TaskManager.RegisterService(SMS);
         }
 
         public void Run()
