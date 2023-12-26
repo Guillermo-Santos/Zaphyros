@@ -10,5 +10,5 @@
 ;			1 -> No
 ; HashedPassword: The Name says everything.
 
-; Note: First Logging on the Zaphyros will be slower, since the password will be marked to be rehashed on boot.
+; Note: First Logging on the Zaphyros user will be slower, since the password will be marked to be rehashed on boot.
 Zaphyros::0::-1::0::$2a$09$zivLk/ukrfki7wwkUTS6PupCnx9Bscyj8xdga7580LgjTHFbmYhfS
