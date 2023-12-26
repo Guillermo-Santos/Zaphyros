@@ -28,7 +28,7 @@ namespace Zaphyros.Core
 
         internal static CosmosVFS Vfs { get; private set; }
         internal static TaskManager TaskManager { get; private set; }
-        internal static Session Session { get; set; }
+        public static Session Session { get; set; }
 
         public void BeforeRun()
         {
