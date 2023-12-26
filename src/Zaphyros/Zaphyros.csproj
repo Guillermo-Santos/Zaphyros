@@ -49,11 +49,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="isoFiles\Libraries\System.Private.CoreLib.dll" />
+      <None Remove="isoFiles\System\Zaphyros.conf" />
       <None Remove="isoFiles\users" />
       <None Remove="isoFiles\Zaphyros.conf" />
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="isoFiles\Libraries\System.Private.CoreLib.dll" />
+      <EmbeddedResource Include="isoFiles\System\Users\Zaphyros.conf" />
       <EmbeddedResource Include="isoFiles\Zaphyros.conf" />
     </ItemGroup>
 
