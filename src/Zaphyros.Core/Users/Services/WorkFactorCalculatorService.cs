@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Cosmos.System.Coroutines;
 using Zaphyros.Core.Apps;
 using BCrypt.Net;
-using Zaphyros.Core.Users.Services;
 
-namespace Zaphyros.Core.Users
+namespace Zaphyros.Core.Users.Services
 {
     internal sealed class WorkFactorCalculatorService : Service
     {
@@ -36,9 +35,9 @@ namespace Zaphyros.Core.Users
             var timeLapse = (end - start).TotalMilliseconds;
             Console.WriteLine("Miliseconds: " + timeLapse);
 
-            if ((timeLapse > maxTime) || (workFactor == 31))
+            if (timeLapse > maxTime || workFactor == 31)
             {
-                Console.WriteLine("Getting Normal" );
+                Console.WriteLine("Getting Normal");
                 PasswordConstants.NormalUser.WorkFactor = workFactor;
                 Console.WriteLine("Getting Admin");
                 PasswordConstants.AdminUser.WorkFactor = workFactor + ADMIN_WORK_FACTOR_MODIFIER;

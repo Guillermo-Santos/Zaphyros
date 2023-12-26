@@ -13,7 +13,7 @@
         <ISOFile>bin\Debug\net6.0\Abyss.iso</ISOFile>
         <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
-
+  
     <PropertyGroup>
         <EnableGDB>False</EnableGDB>
         <StartCosmosGDB>False</StartCosmosGDB>
@@ -54,7 +54,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="isoFiles\users" />
       <EmbeddedResource Include="isoFiles\Zaphyros.conf" />
     </ItemGroup>
 

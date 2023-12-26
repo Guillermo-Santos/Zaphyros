@@ -7,32 +7,10 @@ using System.Text;
 using BCrypt.Net;
 using Cosmos.System.ExtendedASCII;
 using Zaphyros.Plugs;
-//using Console = System.Console;
+using Sys = Cosmos.System;
 
 namespace Zaphyros
 {
-    public class Logger<T>
-    {
-        private readonly Type Type = typeof(T);
-        //private readonly unsafe int syze = sizeof(T);
-        public void TraceMessage(string message,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
-        {
-            Console.WriteLine("message: " + message);
-
-            Console.WriteLine("member Type AssemblyQualifiedName: " + Type.AssemblyQualifiedName);
-            Console.WriteLine("member Type Name: " + Type.Name);
-            Console.WriteLine("member Type Namespace: " + Type.Namespace);
-            //Console.WriteLine("member Type Size: " + syze);
-
-            Console.WriteLine("member name: " + memberName);
-            Console.WriteLine("source file path: " + sourceFilePath);
-            Console.WriteLine("source line number: " + sourceLineNumber);
-        }
-    }
-
     public sealed class Kernel : Sys.Kernel
     {
         private Core.Kernel kernel;
@@ -54,6 +32,13 @@ namespace Zaphyros
 
         protected override void BeforeRun()
         {
+            //mDebugger.Send(welcomeMessages);
+            //var logger = new Logger<Kernel>(new LoggerFactory()
+            //    .UseConsole()
+            //    .UseDebugger());
+            //var logger = new LoggerFactory().UseConsole().UseDebugger().CreateLogger(nameof(Kernel));
+
+            //logger.LogInformation("Hola :D");
             // Kernel Initialization
             kernel = new();
 
