@@ -3,14 +3,15 @@ using System.Text;
 using BCrypt.Net;
 using Zaphyros.Core.Apps;
 
-namespace Zaphyros.Core.Users
+namespace Zaphyros.Core.Users.Services
 {
     internal sealed class UserLogginService : Service
     {
+        private bool logging = false;
+        private UserEntry? userEntry;
 
         public override void Update()
         {
-            bool logging = false;
             Console.Write("UserName: ");
             var username = Console.ReadLine();
             Console.Write("Passoword: ");
@@ -19,7 +20,7 @@ namespace Zaphyros.Core.Users
             do
             {
                 keyInfo = Console.ReadKey(true);
-                if(keyInfo.Key is >= ConsoleKey.A and <= ConsoleKey.NumPad9)
+                if (keyInfo.Key is >= ConsoleKey.A and <= ConsoleKey.NumPad9)
                 {
                     sb.Append(keyInfo.KeyChar);
                 }
@@ -27,15 +28,17 @@ namespace Zaphyros.Core.Users
             }
             while (keyInfo.Key is not ConsoleKey.Enter);
             Console.WriteLine();
-            
+
             var password = sb.ToString();
 
             try
             {
-                var userEntry = UserEntry.GetUserEntries().Where(ue => ue.Name == username).FirstOrDefault();
+                userEntry = UserEntry.GetUserEntries().Where(ue => ue.Name == username).FirstOrDefault();
                 if (userEntry is not null && !string.IsNullOrEmpty(password))
                 {
-
+                    //Console.WriteLine(BCrypt.Net.BCrypt.HashPassword(password, userEntry.Password));
+                    //Console.WriteLine(userEntry.Password);
+                    //Console.WriteLine(BCrypt.Net.BCrypt.Verify(password, userEntry.Password));
                     if (userEntry.NeedReHashing)
                     {
                         var configuration = userEntry.UserType switch
@@ -44,21 +47,17 @@ namespace Zaphyros.Core.Users
                             UserType.Normal => PasswordConstants.NormalUser,
                             _ => throw new ArgumentException($"Invalid User Type {userEntry.UserType}"),
                         };
-                        Console.WriteLine(userEntry.Password);
                         // We do not care why the password need rehashing, we just rehash with everything.
-                        userEntry.Password = BCrypt.Net.BCrypt.ValidateAndReplacePassword(password, userEntry.Password, true, userEntry.HashType, password, true, configuration.HashType, configuration.WorkFactor, true);
+                        userEntry.Password = BCrypt.Net.BCrypt.ValidateAndReplacePassword(password, userEntry.Password, (userEntry.HashType != HashType.None), userEntry.HashType, password, true, configuration.HashType, configuration.WorkFactor, true);
                         userEntry.NeedReHashing = false;
                         userEntry.HashType = configuration.HashType;
+                        userEntry.Save();
                         logging = true;
-                        Console.WriteLine(userEntry.Password);
-
                     }
                     else
                     {
                         logging = BCrypt.Net.BCrypt.EnhancedVerify(password, userEntry.Password, userEntry.HashType);
                     }
-
-                    Console.WriteLine(userEntry);
                 }
 
             }
@@ -68,11 +67,12 @@ namespace Zaphyros.Core.Users
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Sys.Global.Debugger.Send(ex.ToString());
             }
 
             if (logging)
             {
+                Console.Clear();
                 Console.WriteLine($"Welcome {username}");
                 Stop();
             }
@@ -84,7 +84,13 @@ namespace Zaphyros.Core.Users
 
         public override void AfterStart()
         {
-            //TODO: Register User Session as a service.
+            if (logging)
+            {
+                var session = new TerminalSession(new(userEntry!.Name, userEntry!.UserType));
+                Kernel.Session = session;
+                SessionManagerService.Instance.RegisterSession(session);
+                //Kernel.TaskManager.RegisterService(SMS);
+            }
         }
     }
 }

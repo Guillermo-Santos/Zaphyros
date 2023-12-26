@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
 using BCrypt.Net;
 using IL2CPU.API.Attribs;
 using System.Runtime.CompilerServices;
 using Console = System.Console;
-using static System.Environment;
-using Zaphyros.Plugs.SHA;
 using Zaphyros.Core.Security;
-using Cosmos.Core.Memory;
-using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace Zaphyros.Plugs
 {
@@ -34,24 +26,24 @@ namespace Zaphyros.Plugs
         private static ISeedProvider? seedProvider;
         public static ISeedProvider SeedProvider { get => seedProvider ??= new SeedProvider(); set => seedProvider = value; }
         private static Random Random => new(SeedProvider.GetSeed());
-
         public static byte[] EnhancedHash(byte[] inputBytes, char bcryptMinorRevision, HashType hashType)
         {
             try
             {
+                HashAlgorithm hash;
                 switch (hashType)
                 {
                     case HashType.SHA256:
-                        var hash = new Sha256();
-                        hash.AddData(inputBytes, 0, (uint)inputBytes.Length);
-                        inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(hash.GetHash()) + (bcryptMinorRevision >= 'a' ? "\0" : ""));
-                        //inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(CustomSHA256.ComputeHash(inputBytes)) + ((bcryptMinorRevision >= 'a') ? "\0" : ""));
+                        hash = new acryptohashnet.SHA256();
+                        inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(hash.ComputeHash(inputBytes)) + (bcryptMinorRevision >= 'a' ? "\0" : ""));
                         break;
                     case HashType.SHA384:
-                        inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(CustomSHA384.ComputeHash(inputBytes)) + (bcryptMinorRevision >= 'a' ? "\0" : ""));
+                        hash = new acryptohashnet.SHA384();
+                        inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(hash.ComputeHash(inputBytes)) + (bcryptMinorRevision >= 'a' ? "\0" : ""));
                         break;
                     case HashType.SHA512:
-                        inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(CustomSHA512.ComputeHash(inputBytes)) + (bcryptMinorRevision >= 'a' ? "\0" : ""));
+                        hash = new acryptohashnet.SHA512();
+                        inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(hash.ComputeHash(inputBytes)) + (bcryptMinorRevision >= 'a' ? "\0" : ""));
                         break;
                 }
             }
@@ -93,9 +85,14 @@ namespace Zaphyros.Plugs
             }*/
 
             //Console.WriteLine("gs 2");
+
+            // TODO: If string format start to work propertly then replace
+            //var factor = workFactor.ToString();
+            //Console.WriteLine(factor);
             var stringBuilder = new StringBuilder(29);
             stringBuilder.Append("$2").Append(bcryptMinorRevision).Append('$')
                 .Append(workFactor.ToString("D2"))
+            //    .Append(workFactor.ToString((factor.Length == 1 ? "0" + factor : factor)))
                 .Append('$');
             stringBuilder.Append(EncodeBase64(array, array.Length));
             //Console.WriteLine(stringBuilder.ToString());

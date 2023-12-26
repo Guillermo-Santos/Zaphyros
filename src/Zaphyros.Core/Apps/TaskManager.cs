@@ -12,10 +12,11 @@ namespace Zaphyros.Core.Apps
 {
     internal class TaskManager
     {
-        private readonly Dictionary<string, Service> _services = new();
-        private readonly Dictionary<string, Coroutine> _coroutines = new();
-        private readonly Queue<(string key, Service Service)> _queue = new();
+        private readonly Dictionary<int, Service> _services = new();
+        private readonly Dictionary<int, Coroutine> _coroutines = new();
+        private readonly Queue<(int PID, Service Service)> _queue = new();
         private readonly CoroutinePool _coroutinePool;
+        private int PID_COUNT;
 
         public TaskManager()
         {
@@ -25,24 +26,23 @@ namespace Zaphyros.Core.Apps
             _coroutinePool.HeapCollectionInterval = 10_000;
         }
 
-        public string RegisterService(Service service)
+        public int RegisterService(Service service)
         {
-            string key;
+            int PID;
             do
             {
-                key = Guid.NewGuid().ToString();
+                PID = PID_COUNT++;
             } 
-            while (_services.ContainsKey(key));
+            while (_services.ContainsKey(PID));
 
-            return RegisterService(key, service);
+            return RegisterService(PID, service);
         }
 
-        public string RegisterService(string key, Service service)
+        private int RegisterService(int PID, Service service)
         {
-            _queue.Enqueue((key, service));
-            //_services.Add(key, service);
-            //_coroutinePool.AddCoroutine(_coroutines[key]);
-            return key;
+            service.PID = PID;
+            _queue.Enqueue((PID, service));
+            return PID;
         }
 
         private static IEnumerator<CoroutineControlPoint> CoroutineCicle(Service service)
@@ -73,21 +73,28 @@ namespace Zaphyros.Core.Apps
         private void CheckStoppedServices()
         {
             //Sys.Global.Debugger.Send("Checking Stopped Services");
-            Stack<string> keysToRemove = new();
+            Stack<int> keysToRemove = new();
             foreach (var service in _services)
             {
                 if (service.Value.IsTermidated)
                 {
                     Sys.Global.Debugger.Send("After Start");
-                    service.Value.AfterStart();
-                    var key = service.Key;
-                    Sys.Global.Debugger.Send($"Adding Service to Remove: {key}");
+                    try
+                    {
+                        service.Value.AfterStart();
+                    }
+                    catch(Exception ex)
+                    {
+                        Sys.Global.Debugger.Send(ex.ToString());
+                    }
+                    var PID = service.Key;
+                    Sys.Global.Debugger.Send($"Adding Service to Remove: {PID}");
                     _coroutinePool.RemoveCoroutine(_coroutines[service.Key]);
-                    keysToRemove.Push(key);
+                    keysToRemove.Push(PID);
                 }
             }
 
-            //Sys.Global.Debugger.Send($"Removing Services");
+            Sys.Global.Debugger.Send($"Removing Services");
             foreach (var key in keysToRemove)
             {
                 Sys.Global.Debugger.Send($"Removing Service: {key}");
@@ -97,13 +104,13 @@ namespace Zaphyros.Core.Apps
         }
         private void CheckNewServices()
         {
-            //Sys.Global.Debugger.Send("Checking New Services");
+            Sys.Global.Debugger.Send("Checking New Services");
             while(_queue.Count > 0)
             {
                 var service = _queue.Dequeue();
-                _services.Add(service.key, service.Service);
+                _services.Add(service.PID, service.Service);
                 var coroutine = new Coroutine(CoroutineCicle(service.Service));
-                _coroutines.Add(service.key, coroutine);
+                _coroutines.Add(service.PID, coroutine);
                 _coroutinePool.AddCoroutine(coroutine);
             }
         }

@@ -5,8 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Zaphyros.Core.Security;
-using XSharp;
-using XSharp.Assembler.x86;
+using Cosmos.System.Helpers;
+using Cosmos.System.Network.IPv4.TCP;
+using Cosmos.System.Network.IPv4;
+using Cosmos.System.Network;
+using IL2CPU.API.Attribs;
+using System.Net.Sockets;
+using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace Zaphyros.Plugs
 {
@@ -17,13 +23,8 @@ namespace Zaphyros.Plugs
             // Get the current timestamp (number of milliseconds since January 1, 1970 UTC)
             ulong timestamp = (ulong)(DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond);
 
-            // Get the hash code of the current thread object
-            ulong upTime = CPU.GetCPUUptime();
-
-            // Combine the timestamp and thread hash code to create a unique seed
-            int seed = (int)(timestamp ^ upTime);
-
-            return seed;
+            return (int)timestamp;
         }
     }
+
 }

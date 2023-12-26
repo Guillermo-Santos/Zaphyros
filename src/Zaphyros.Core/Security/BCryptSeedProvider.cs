@@ -45,7 +45,7 @@ namespace Zaphyros.Core.Security
 
                 foreach (var seed in seeds)
                 {
-                    Seed = (int)PerformOperation(PerformOperation((ulong)Seed) ^ PerformOperation((ulong)seed));
+                    Seed = (int)PerformRandomOperation(PerformRandomOperation((ulong)Seed) ^ PerformRandomOperation((ulong)seed));
                 }
                 Seed ^= operationRandom.Next();
                 Seed = Seed << 23 | Seed >> 41;
@@ -65,7 +65,7 @@ namespace Zaphyros.Core.Security
         }
 
         #region Helper Methods
-        private static ulong PerformOperation(ulong data)
+        private static ulong PerformRandomOperation(ulong data)
         {
             var random = new Random((int)data);
             int operation = random.Next(13);

@@ -15,7 +15,7 @@ namespace Zaphyros.Core.Apps
         public bool IsRunning => isRunning;
 
         public bool IsTermidated => isTermidated;
-
+        public int PID { get; internal set; }
         protected Service()
         {
             isRunning = false; // Initialize to a known state
