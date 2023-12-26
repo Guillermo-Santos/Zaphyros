@@ -1,6 +1,6 @@
 ﻿namespace Zaphyros.Core.Users
 {
-    internal enum SessionState
+    public enum SessionState
     {
         Active,
         Inactive,
