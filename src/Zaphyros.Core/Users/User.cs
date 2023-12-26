@@ -10,6 +10,8 @@
         public bool IsNormal => UserType is UserType.Normal;
         public IReadOnlyCollection<PermissionEntry> Permisions => _permisions;
 
+        public UserEntry? UserEntry => UserEntry.GetUserEntries().FirstOrDefault(e => e.Name == this.Name);
+
         public User(string name, UserType userType)
         {
             Name = name;
