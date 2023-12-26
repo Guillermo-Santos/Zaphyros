@@ -40,7 +40,7 @@ namespace Zaphyros.Core.Users
             return userEntry;
         }
 
-        public static void Save(UserEntry userEntry)
+        public void Save()
         {
             var lines = new List<string>();
 
@@ -48,14 +48,14 @@ namespace Zaphyros.Core.Users
 
             lines.AddRange(text.Split(Environment.NewLine));
 
-            var index = lines.FindIndex(line => line.StartsWith(userEntry.Name));
+            var index = lines.FindIndex(line => line.StartsWith(this.Name));
             if (index > -1)
             {
-                lines[index] = userEntry.ToString();
+                lines[index] = this.ToString();
             }
             else
             {
-                lines.Add(userEntry.ToString());
+                lines.Add(this.ToString());
             }
 
             using var writer = new StreamWriter(File.OpenWrite(SysFiles.USER_FILE), encoding: Encoding.ASCII);

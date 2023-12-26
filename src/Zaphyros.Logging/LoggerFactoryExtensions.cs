@@ -1,4 +1,6 @@
-﻿namespace Zaphyros.Logging
+﻿using Zaphyros.Logging.Providers;
+
+namespace Zaphyros.Logging
 {
     public static class LoggerFactoryExtensions
     {

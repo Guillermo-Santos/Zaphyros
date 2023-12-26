@@ -36,7 +36,9 @@ namespace Zaphyros.Core.Users.Services
                 userEntry = UserEntry.GetUserEntries().Where(ue => ue.Name == username).FirstOrDefault();
                 if (userEntry is not null && !string.IsNullOrEmpty(password))
                 {
-
+                    Console.WriteLine(BCrypt.Net.BCrypt.HashPassword(password, userEntry.Password));
+                    Console.WriteLine(userEntry.Password);
+                    Console.WriteLine(BCrypt.Net.BCrypt.Verify(password, userEntry.Password));
                     if (userEntry.NeedReHashing)
                     {
                         var configuration = userEntry.UserType switch
@@ -46,9 +48,10 @@ namespace Zaphyros.Core.Users.Services
                             _ => throw new ArgumentException($"Invalid User Type {userEntry.UserType}"),
                         };
                         // We do not care why the password need rehashing, we just rehash with everything.
-                        userEntry.Password = BCrypt.Net.BCrypt.ValidateAndReplacePassword(password, userEntry.Password, true, userEntry.HashType, password, true, configuration.HashType, configuration.WorkFactor, true);
+                        userEntry.Password = BCrypt.Net.BCrypt.ValidateAndReplacePassword(password, userEntry.Password, (userEntry.HashType != HashType.None), userEntry.HashType, password, true, configuration.HashType, configuration.WorkFactor, true);
                         userEntry.NeedReHashing = false;
                         userEntry.HashType = configuration.HashType;
+                        userEntry.Save();
                         logging = true;
                     }
                     else
@@ -64,12 +67,12 @@ namespace Zaphyros.Core.Users.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Sys.Global.Debugger.Send(ex.ToString());
             }
 
             if (logging)
             {
-                Console.WriteLine("Welcome {0}", username);
+                Console.WriteLine($"Welcome {username}");
                 Stop();
             }
             else

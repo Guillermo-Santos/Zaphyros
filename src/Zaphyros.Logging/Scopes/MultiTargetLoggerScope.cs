@@ -1,10 +1,10 @@
-﻿namespace Zaphyros.Logging
+﻿namespace Zaphyros.Logging.Scopes
 {
     internal sealed class MultiTargetLoggerScope<TState> : LoggerScope<TState>
     {
         private readonly IEnumerable<IDisposable?> loggerScopes;
 
-        public MultiTargetLoggerScope(TState state, IScopable logger, IEnumerable<IDisposable?> loggerScopes) : base(state, logger)
+        public MultiTargetLoggerScope(TState state, IScopableLogger logger, IEnumerable<IDisposable?> loggerScopes) : base(state, logger)
         {
             this.loggerScopes = loggerScopes;
         }

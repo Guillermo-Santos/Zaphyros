@@ -1,12 +1,12 @@
-﻿namespace Zaphyros.Logging
+﻿namespace Zaphyros.Logging.Scopes
 {
     internal class LoggerScope<TState> : IDisposable
     {
         private readonly TState _state;
-        private readonly IScopable _logger;
+        private readonly IScopableLogger _logger;
         private bool _disposed;
 
-        public LoggerScope(TState state, IScopable logger)
+        public LoggerScope(TState state, IScopableLogger logger)
         {
             _state = state;
             _logger = logger;

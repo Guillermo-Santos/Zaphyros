@@ -62,32 +62,20 @@ namespace Zaphyros.Core
                 Console.WriteLine("System.Private.CoreLib.dll File Added Successfully...");
             }
 
-            //if (!File.Exists(SysFiles.USER_FILE))
+            if (!File.Exists(SysFiles.USER_FILE))
             {
                 Console.WriteLine("Adding users...");
                 if (!Directory.Exists($@"0:\System"))
                 {
                     Directory.CreateDirectory($@"0:\System");
                 }
-                File.Create($@"0:\System\users").Close();
-                File.WriteAllBytes($@"0:\System\users", File.ReadAllBytes("1:\\System\\users.sys"));
+                File.Create(SysFiles.USER_FILE).Close();
+                File.WriteAllBytes(SysFiles.USER_FILE, File.ReadAllBytes("1:\\System\\users.sys"));
                 Console.WriteLine("users File Added Successfully...");
             }
 
-            //Console.WriteLine(Encoding.ASCII.GetString(SysFiles.usrFile));
-            foreach(var file in Directory.GetFiles("1:\\","*", SearchOption.AllDirectories))
-            {
-                Console.WriteLine(file);
-            }
-            //Console.ReadKey();
-            //Console.WriteLine(File.ReadAllText("1:\\pass.conf"));
-            //Console.ReadKey();
-
-            TaskManager = new TaskManager();
-            Console.WriteLine($"Registering Service {nameof(WorkFactorCalculatorService)}");
+            TaskManager = new();
             TaskManager.RegisterService(new WorkFactorCalculatorService());
-            Console.WriteLine($"Registered Service {nameof(WorkFactorCalculatorService)}");
-
         }
 
         public void Run()

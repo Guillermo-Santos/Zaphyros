@@ -1,6 +1,8 @@
-﻿namespace Zaphyros.Logging
+﻿using Zaphyros.Logging.Scopes;
+
+namespace Zaphyros.Logging
 {
-    public sealed class Logger : IScopable, ILogger
+    internal sealed class Logger : IScopableLogger
     {
         private readonly string _categoryName;
         private readonly Action<LogLevel, string, string> logWriter;

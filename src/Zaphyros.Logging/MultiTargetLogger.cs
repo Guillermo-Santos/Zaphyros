@@ -1,6 +1,8 @@
-﻿namespace Zaphyros.Logging
+﻿using Zaphyros.Logging.Scopes;
+
+namespace Zaphyros.Logging
 {
-    public sealed class MultiTargetLogger : IScopable, ILogger
+    internal sealed class MultiTargetLogger : IScopableLogger
     {
         private readonly IEnumerable<ILogger> loggers;
         private readonly List<IDisposable> _scopes = new();

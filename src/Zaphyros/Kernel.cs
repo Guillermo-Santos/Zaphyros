@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using BCrypt.Net;
 using Cosmos.System.ExtendedASCII;
+using Zaphyros.Logging;
 using Zaphyros.Plugs;
 using Sys = Cosmos.System;
 

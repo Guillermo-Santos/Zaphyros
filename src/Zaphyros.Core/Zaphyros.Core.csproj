@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="acryptohashnet" Version="2.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Cosmos.Coroutines" Version="1.0.1" />
     <PackageReference Include="Cosmos.System2" Version="0-*" />
@@ -41,5 +42,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\DotNetParser\DotNetClr\libDotNetClr.csproj" />
     <ProjectReference Include="..\..\..\DotNetParser\LibDotNetParser\LibDotNetParser.csproj" />
+    <ProjectReference Include="..\Zaphyros.Logging\Zaphyros.Logging.csproj" />
   </ItemGroup>
 </Project>

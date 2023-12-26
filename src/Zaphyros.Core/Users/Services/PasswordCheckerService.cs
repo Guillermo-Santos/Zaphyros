@@ -39,10 +39,11 @@ namespace Zaphyros.Core.Users.Services
 
                 userEntry.NeedReHashing = (userEntry.HashType != configuration.HashType) || BCrypt.Net.BCrypt.PasswordNeedsRehash(userEntry.Password, configuration.WorkFactor);
                 Console.WriteLine(userEntry);
-                UserEntry.Save(userEntry);
+                userEntry.Save();
             }
             catch (Exception ex)
             {
+                Sys.Global.Debugger.Send(ex.Message);
                 Console.WriteLine(ex.Message);
             }
         }

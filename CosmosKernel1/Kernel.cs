@@ -11,21 +11,21 @@ namespace CosmosKernel1
             factory.UseConsole()
                 //.UseDebugger();
                 ;
-            var logger = factory.CreateLogger(nameof(Kernel));
+            var logger = (IScopableLogger)factory.CreateLogger(nameof(Kernel));
             //var scope = logger.BeginScope<Kernel>(this);
 
             var a = true;
 
             if (a)
             {
-                Logger r = (Logger)factory.CreateLogger("Default Instantiations");
+                var r = (IScopableLogger)factory.CreateLogger("Default Instantiations");
                 r.Log(LogLevel.Trace, 1, "", null, (string state, Exception? error) => "Direct Method Link!");
                 r.Log(LogLevel.Trace, 1, "", null, (string state, Exception? error) => "\n\tasds\tDire\n\tsd\tct Method Link!");
                 r.LogInformation("Juhu~");
             }
 
             logger.Log(LogLevel.Information, 1, "", null, (string state, Exception? error) => "Cosmos booted successfully. Type a line of text to get it echoed back.");
-            //Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(logger, "Cosmos booted successfully. Type a line of text to get it echoed back.");
+            Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(logger, "Cosmos booted successfully. Type a line of text to get it echoed back.");
 
             //scope.Dispose();
             factory.Dispose();

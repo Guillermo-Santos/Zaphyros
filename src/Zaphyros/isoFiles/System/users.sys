@@ -1,5 +1,14 @@
+; UserName::UserType::HashType::NeedRehash::HashedPassword
+;
+; UserName: Name of the user
+; UserType: Type of the user
+;			0 -> Admin
+;			1 -> Normal
+; HashType: Prehashing algorithm(see pass.conf for details)
+; NeedRehash: Say if the password would need to be rehashed on next logon
+;			0 -> Yes
+;			1 -> No
+; HashedPassword: The Name says everything.
 
-// UserName::UserType::HashType::NeedRehash::HashedPassword
-
-//Zaphyros::Admin::SHA256::No::Zaphyros
-Zaphyros::0::0::0::$2a$12$45C5I91rz0TzltInInYfUug3Rh0ohvXFfqJk6Ki/hFCUjZJ1xz9Kq
+; Note: First Logging on the Zaphyros will be slower, since the password will be marked to be rehashed on boot.
+Zaphyros::0::-1::0::$2a$09$zivLk/ukrfki7wwkUTS6PupCnx9Bscyj8xdga7580LgjTHFbmYhfS

@@ -1,6 +1,6 @@
-﻿namespace Zaphyros.Logging
+﻿namespace Zaphyros.Logging.Providers
 {
-    internal sealed class ConsoleLoggerProvider : ILoggerProvider
+    public sealed class ConsoleLoggerProvider : ILoggerProvider
     {
         public ILogger CreateLogger(string categoryName)
         {

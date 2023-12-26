@@ -54,7 +54,6 @@ namespace Zaphyros.Core.Users
     internal class TerminalSession : Session
     {
         public static string Key => "899F7432-3F58-4994-A8D0-F312DAD5319B";
-        public string CurrentWorkingDirectory { get; set; } = Environment.CurrentDirectory;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private static CommandHandler commandHandler;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

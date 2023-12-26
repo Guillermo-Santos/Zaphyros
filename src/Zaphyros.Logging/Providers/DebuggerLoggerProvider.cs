@@ -1,6 +1,6 @@
-﻿namespace Zaphyros.Logging
+﻿namespace Zaphyros.Logging.Providers
 {
-    internal sealed class DebuggerLoggerProvider : ILoggerProvider
+    public sealed class DebuggerLoggerProvider : ILoggerProvider
     {
         public ILogger CreateLogger(string categoryName)
         {

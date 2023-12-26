@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Zaphyros.Logging\Zaphyros.Logging.csproj" />
+      <ProjectReference Include="..\src\Zaphyros.Logging\Zaphyros.Logging.csproj" />
     </ItemGroup>
 
 </Project>
