@@ -36,9 +36,9 @@ namespace Zaphyros.Core.Users.Services
                 userEntry = UserEntry.GetUserEntries().Where(ue => ue.Name == username).FirstOrDefault();
                 if (userEntry is not null && !string.IsNullOrEmpty(password))
                 {
-                    Console.WriteLine(BCrypt.Net.BCrypt.HashPassword(password, userEntry.Password));
-                    Console.WriteLine(userEntry.Password);
-                    Console.WriteLine(BCrypt.Net.BCrypt.Verify(password, userEntry.Password));
+                    //Console.WriteLine(BCrypt.Net.BCrypt.HashPassword(password, userEntry.Password));
+                    //Console.WriteLine(userEntry.Password);
+                    //Console.WriteLine(BCrypt.Net.BCrypt.Verify(password, userEntry.Password));
                     if (userEntry.NeedReHashing)
                     {
                         var configuration = userEntry.UserType switch
@@ -72,6 +72,7 @@ namespace Zaphyros.Core.Users.Services
 
             if (logging)
             {
+                Console.Clear();
                 Console.WriteLine($"Welcome {username}");
                 Stop();
             }
@@ -85,11 +86,10 @@ namespace Zaphyros.Core.Users.Services
         {
             if (logging)
             {
-                var SMS = new SessionManagerService();
-                var session = new TerminalSession(new User(userEntry!.Name, userEntry.UserType));
+                var session = new TerminalSession(new(userEntry!.Name, userEntry!.UserType));
                 Kernel.Session = session;
-                SMS.RegisterSession(session);
-                Kernel.TaskManager.RegisterService(SMS);
+                SessionManagerService.Instance.RegisterSession(session);
+                //Kernel.TaskManager.RegisterService(SMS);
             }
         }
     }
