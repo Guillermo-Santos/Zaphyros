@@ -38,12 +38,10 @@ namespace Zaphyros.Core.Apps
             return RegisterService(PID, service);
         }
 
-        public int RegisterService(int PID, Service service)
+        private int RegisterService(int PID, Service service)
         {
             service.PID = PID;
             _queue.Enqueue((PID, service));
-            //_services.Add(key, service);
-            //_coroutinePool.AddCoroutine(_coroutines[key]);
             return PID;
         }
 
@@ -81,7 +79,14 @@ namespace Zaphyros.Core.Apps
                 if (service.Value.IsTermidated)
                 {
                     Sys.Global.Debugger.Send("After Start");
-                    service.Value.AfterStart();
+                    try
+                    {
+                        service.Value.AfterStart();
+                    }
+                    catch(Exception ex)
+                    {
+                        Sys.Global.Debugger.Send(ex.ToString());
+                    }
                     var PID = service.Key;
                     Sys.Global.Debugger.Send($"Adding Service to Remove: {PID}");
                     _coroutinePool.RemoveCoroutine(_coroutines[service.Key]);
@@ -89,7 +94,7 @@ namespace Zaphyros.Core.Apps
                 }
             }
 
-            //Sys.Global.Debugger.Send($"Removing Services");
+            Sys.Global.Debugger.Send($"Removing Services");
             foreach (var key in keysToRemove)
             {
                 Sys.Global.Debugger.Send($"Removing Service: {key}");
@@ -99,7 +104,7 @@ namespace Zaphyros.Core.Apps
         }
         private void CheckNewServices()
         {
-            //Sys.Global.Debugger.Send("Checking New Services");
+            Sys.Global.Debugger.Send("Checking New Services");
             while(_queue.Count > 0)
             {
                 var service = _queue.Dequeue();
