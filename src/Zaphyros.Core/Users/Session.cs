@@ -10,14 +10,14 @@ using Zaphyros.Core.Configuration;
 
 namespace Zaphyros.Core.Users
 {
-    internal struct EnvironmentVariable
+    public struct EnvironmentVariable
     {
         public string Name;
         public string Value;
         public bool SystemManaged;
     }
 
-    internal abstract class Session
+    public abstract class Session
     {
         public Guid Id { get; private set; }
         public string Name => User.Name;
@@ -34,7 +34,7 @@ namespace Zaphyros.Core.Users
             var home = new EnvironmentVariable()
             {
                 Name = "HOME",
-                Value = $"0\\Users\\{User.Name}\\",
+                Value = $"0:\\Users\\{User.Name}",
                 SystemManaged = true
             };
             CurrentDirectory = home.Value;
