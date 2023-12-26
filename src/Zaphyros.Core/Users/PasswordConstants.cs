@@ -20,13 +20,13 @@ namespace Zaphyros.Core.Users
         private static readonly PasswordConfiguration adminUser = new()
         {
             UserType = UserType.Admin,
-            HashType = HashType.SHA384
+            HashType = HashType.SHA512
         };
 
         public static readonly PasswordConfiguration NormalUser = new()
         {
             UserType = UserType.Normal,
-            HashType = HashType.SHA256
+            HashType = HashType.SHA384
         };
 
         public static PasswordConfiguration AdminUser => adminUser;
