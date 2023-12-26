@@ -26,7 +26,7 @@ namespace Zaphyros.Core.Users.Services
                 var userEntry = entries.Current;
                 if (userEntry.NeedReHashing)
                 {
-                    Console.WriteLine(userEntry);
+                    Sys.Global.Debugger.Send(userEntry.ToString());
                     return;
                 }
 
@@ -38,13 +38,12 @@ namespace Zaphyros.Core.Users.Services
                 };
 
                 userEntry.NeedReHashing = (userEntry.HashType != configuration.HashType) || BCrypt.Net.BCrypt.PasswordNeedsRehash(userEntry.Password, configuration.WorkFactor);
-                Console.WriteLine(userEntry);
+                Sys.Global.Debugger.Send(userEntry.ToString());
                 userEntry.Save();
             }
             catch (Exception ex)
             {
                 Sys.Global.Debugger.Send(ex.Message);
-                Console.WriteLine(ex.Message);
             }
         }
 
