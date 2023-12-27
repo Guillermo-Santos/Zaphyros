@@ -13,7 +13,7 @@ namespace Zaphyros.Core.Commands.FileSystem
         {
             string path;
 
-            path = args.Length > 0 ? args[0] : Kernel.Session.CurrentDirectory;
+            path = args.Length > 0 ? args[0] : Environment.CurrentDirectory;
 
             if (string.IsNullOrEmpty(path)) return CommandResult.Failure;
 

@@ -7,12 +7,8 @@ namespace Zaphyros.Core.Users
     {
         public SystemSession() : base(new("SYSTEM", UserType.Admin))
         {
-            EnvironmentVariables["HOME"] = new EnvironmentVariable()
-            {
-                Name = "HOME",
-                Value = $"0:\\System",
-                SystemManaged = true
-            };
+            var home = EnvironmentVariables["HOME"];
+            home.Value = "0:\\System";
         }
 
         public override void Start()

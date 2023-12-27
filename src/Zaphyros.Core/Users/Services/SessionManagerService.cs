@@ -15,10 +15,7 @@ namespace Zaphyros.Core.Users.Services
 
         public override void BeforeStart()
         {
-            foreach (var session in _sessions)
-            {
-                session.Start();
-            }
+            RegisterSession(new SystemSession());
         }
 
         public override void Update()
@@ -40,6 +37,7 @@ namespace Zaphyros.Core.Users.Services
         internal void RegisterSession(Session session)
         {
             Sys.Global.Debugger.Send($"Registering {session.GetType().Name}-{session.Name}");
+            session.Start();
             _sessions.Add(session);
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace Zaphyros.Core.Users
 {
-    internal class User
+    public class User
     {
         private readonly List<PermissionEntry> _permisions;
 

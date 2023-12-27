@@ -19,25 +19,21 @@ namespace Zaphyros.Core.Users
 
     public abstract class Session
     {
-        public Guid Id { get; private set; }
         public string Name => User.Name;
         public User User { get; private set; }
         public SessionState State { get; protected set; }
-        public string CurrentDirectory { get; set; }
 
         public Dictionary<string, EnvironmentVariable> EnvironmentVariables { get; private set; }
 
         public Session(User user)
         {
             User = user;
-            Id = Guid.NewGuid(); 
             var home = new EnvironmentVariable()
             {
                 Name = "HOME",
                 Value = $"0:\\Users\\{User.Name}",
                 SystemManaged = true
             };
-            CurrentDirectory = home.Value;
             EnvironmentVariables = new()
             {
                 { home.Name, home }
